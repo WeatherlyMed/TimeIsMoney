@@ -6,6 +6,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, FloatField
 from wtforms.validators import DataRequired, Length, NumberRange
 from flask_wtf.file import FileField, FileAllowed
+from werkzeug.utils import secure_filename
 import os
 
 app = Flask(__name__)
@@ -44,3 +45,60 @@ class ScreenTimeForm(FlaskForm):
     screen_time = FloatField('Screen Time (minutes)', validators=[DataRequired(), NumberRange(min=0)])
     screenshot = FileField('Screenshot', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField('Update Screen Time')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.password == form.password.data:
+            login_user(user)
+            return redirect(url_for('dashboard'))
+    return render_template('login.html', form=form)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = SignupForm()
+    if form.validate_on_submit():
+        new_user = User(username=form.username.data, password=form.password.data)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('signup.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    users = User.query.all()
+    form = ScreenTimeForm()
+    return render_template('dashboard.html', users=users, form=form)
+
+@app.route('/update_screen_time', methods=['POST'])
+@login_required
+def update_screen_time():
+    form = ScreenTimeForm()
+    if form.validate_on_submit():
+        screenshot = form.screenshot.data
+        filename = secure_filename(screenshot.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        screenshot.save(filepath)
+        
+        user = current_user
+        user.screen_time += form.screen_time.data
+        user.last_checked = datetime.utcnow()
+        db.session.commit()
+        
+        flash('Screen time updated successfully!', 'success')
+    else:
+        flash('Failed to update screen time. Please try again.', 'danger')
+    return redirect(url_for('dashboard'))
+
+if __name__ == '__main__':
+    db.create_all()
+    app.run(debug=True)
