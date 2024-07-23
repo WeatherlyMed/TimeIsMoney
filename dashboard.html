@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Screen Time Leaderboard</h1>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Screen Time (minutes)</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.screen_time }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <form method="post" action="/update_screen_time" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.screen_time.label }}<br>
+            {{ form.screen_time() }}
+        </div>
+        <div>
+            {{ form.screenshot.label }}<br>
+            {{ form.screenshot() }}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+    <a href="/logout">Logout</a>
+</body>
+</html>
