@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>Screen Time Leaderboard</h1>
@@ -32,6 +33,6 @@
             {{ form.submit() }}
         </div>
     </form>
-    <a href="/logout">Logout</a>
+    <button><a href="/logout">Logout</a></button>
 </body>
 </html>

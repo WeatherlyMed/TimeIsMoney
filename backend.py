@@ -99,6 +99,14 @@ def update_screen_time():
         flash('Failed to update screen time. Please try again.', 'danger')
     return redirect(url_for('dashboard'))
 
+@app.route('/')
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    else:
+        return redirect(url_for('login'))
+
 if __name__ == '__main__':
-    db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)

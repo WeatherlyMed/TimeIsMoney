@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Login</title>
 </head>
 <body>
     <form method="post">
@@ -19,5 +20,8 @@
             {{ form.submit() }}
         </div>
     </form>
+    <div>
+        <p>No Account? <a href="{/signup}">Sign Up</a></p>
+    </div>
 </body>
 </html>
