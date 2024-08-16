@@ -1,0 +1,8 @@
+  GNU nano 7.2                                                                        requirements.txt                                                                                  
+Flask
+Flask-SQLAlchemy
+Flask-Login
+Flask-WTF
+WTForms
+Werkzeug
+secrets
