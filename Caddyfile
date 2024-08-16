@@ -1,0 +1,3 @@
+http://roseandthorn.hackclub.app {
+        reverse_proxy / localhost:44103
+}
