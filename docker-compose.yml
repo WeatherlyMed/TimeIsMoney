@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  flask-app:
+    image: flask-app
+    container_name: flask-app
+    ports:
+      - "57309:57309"
+    restart: always
+
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    ports:
+      - "44103:44103"    # HTTp
+    volumes:
+      - /home/roseandthorn/pub/TimeIsMoney/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: always
+
+volumes:
+  caddy_data:
+  caddy_config:
